@@ -1,11 +1,17 @@
-name: Initialize Database
+name: PS2 Market Scraper Engine
 
 on:
-  workflow_dispatch: # Allows manual trigger from GitHub web interface
+  schedule:
+    - cron: '0 */6 * * *' # Runs every 6 hours
+  workflow_dispatch: # Manual trigger
+
+# CRITICAL FIX: Grants write permissions to commit database updates back to repository
+permissions:
+  contents: write
 
 jobs:
-  seed-db:
-    runs-on: ubuntu-latest
+  run-scraper:
+    runs-runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -13,18 +19,21 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
       - name: Install Dependencies
-        run: pip install requests
+        run: pip install requests beautifulsoup4
 
-      - name: Run Seed Script
+      - name: Initialize or Seed Database
         run: python seed_database.py
 
-      - name: Commit and Save Generated Database File
+      - name: Execute Multi-Market Scraper
+        run: python scraper.py
+
+      - name: Save Updated Database File
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add ps2_market.db
-          git commit -m "Generated ps2_market.db database file" || exit 0
+          git commit -m "Auto-update prices, stock counts, and Reddit sentiment data" || exit 0
           git push
