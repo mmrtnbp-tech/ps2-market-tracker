@@ -2,16 +2,15 @@ name: PS2 Market Scraper Engine
 
 on:
   schedule:
-    - cron: '0 */6 * * *' # Runs every 6 hours
-  workflow_dispatch: # Manual trigger
+    - cron: '0 */6 * * *' # Runs automatically every 6 hours
+  workflow_dispatch: # Allows manual trigger from GitHub web UI
 
-# CRITICAL FIX: Grants write permissions to commit database updates back to repository
 permissions:
-  contents: write
+  contents: write # Grants write permissions to save updated database back to repo
 
 jobs:
   run-scraper:
-    runs-runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
